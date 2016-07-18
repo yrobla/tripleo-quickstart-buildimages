@@ -1,0 +1,32 @@
+#!/bin/bash
+# Repo script to setup rhel-7 with osp8
+
+set -eux
+
+REG_REPOS="rhel-7-server-rpms rhel-7-server-extras-rpms rhel-7-server-rh-common-rpms" # repos to enable for image build
+
+subscription-manager register --username {{ rhel_reg_user }} --password {{ rhel_reg_password }} --force
+
+# first remove old subscriptions if we have
+subscription-manager remove --all || true
+
+# attach the desired pool id
+subscription-manager attach --pool={{ rhel_reg_pool_id }}
+
+repos="repos --enable rhel-7-server-rpms"
+for repo in $(echo $REG_REPOS | tr ',' '\n'); do
+    repos="$repos --enable $repo"
+done
+
+subscription-manager $repos
+
+# install centos packages
+curl -Lo /etc/yum.repos.d/delorean.repo http://trunk.rdoproject.org/centos7-{{ artib_release }}/{{ artib_delorean_hash | default('current-passed-ci')}}/delorean.repo
+
+curl -Lo /etc/yum.repos.d/delorean-deps.repo http://trunk.rdoproject.org/centos7-{{ artib_release }}/delorean-deps.repo
+
+yum install -y yum-plugin-priorities
+
+yum install -y centos-release-ceph
+
+yum update -y
