@@ -8,6 +8,7 @@ REG_REPOS="rhel-7-server-rpms rhel-7-server-extras-rpms rhel-7-server-rh-common-
 subscription-manager register --username {{ rhel_reg_user }} --password {{ rhel_reg_password }} --force
 
 # first remove old subscriptions if we have
+subscription-manager unsubscribe --all || true
 subscription-manager remove --all || true
 
 # attach the desired pool id
