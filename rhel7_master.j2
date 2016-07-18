@@ -3,7 +3,7 @@
 
 set -eux
 
-REG_REPOS="rhel-7-server-rpms rhel-7-server-extras-rpms rhel-7-server-rh-common-rpms" # repos to enable for image build
+REG_REPOS="rhel-7-server-rpms rhel-7-server-extras-rpms rhel-7-server-rh-common-rpms rhel7-server-optional-rpms" # repos to enable for image build
 
 subscription-manager register --username {{ rhel_reg_user }} --password {{ rhel_reg_password }} --force
 
@@ -20,6 +20,7 @@ for repo in $(echo $REG_REPOS | tr ',' '\n'); do
 done
 
 subscription-manager $repos
+yum update -y
 
 # install centos packages
 curl -Lo /etc/yum.repos.d/delorean.repo http://trunk.rdoproject.org/centos7-{{ artib_release }}/{{ artib_delorean_hash | default('current-passed-ci')}}/delorean.repo
