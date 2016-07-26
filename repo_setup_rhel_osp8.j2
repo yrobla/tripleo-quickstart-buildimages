@@ -7,7 +7,7 @@ REG_REPOS="rhel-7-server-rpms rhel-7-server-extras-rpms rhel-7-server-openstack-
 
 subscription-manager register --username {{ rhel_reg_user }} --password {{ rhel_reg_password }} --force --auto-attach
 
-subscription-manager list --available | grep "Employee SKU"
+ subscription-manager list --pool-only --available --matches="Employee SKU"
 
 # attach the desired pool id
 subscription-manager attach --pool={{ rhel_reg_pool_id }}
