@@ -7,4 +7,4 @@ yum install -y {% for package in artib_overcloud_packages %} {{ package }} {% en
 
 # remove all subscriptions in that system
 subscription-manager remove --all
-subscription-manager unregister --username={{ rhel_reg_user }}
+subscription-manager unregister
